@@ -49,9 +49,9 @@ function logMessage(message, level = 'info') {
 (async () => {
   // 避免图片资源跨域问题
   const OriginalImage = window.Image;
-  window.Image = function(...args) {
+  window.Image = function (...args) {
     const img = new OriginalImage(...args);
-    img.crossOrigin = "anonymous";
+    img.crossOrigin = 'anonymous';
     return img;
   };
   window.Image.prototype = OriginalImage.prototype;
@@ -62,7 +62,7 @@ function logMessage(message, level = 'info') {
     // 加载CSS和JS
     await Promise.all([
       loadExternalResource(live2d_path + 'waifu.css', 'css'),
-      loadExternalResource(live2d_path + 'waifu-tips.js', 'js')
+      loadExternalResource(live2d_path + 'waifu-tips.js', 'js'),
     ]);
 
     logMessage('✅ 核心文件加载完成');
@@ -81,7 +81,7 @@ function logMessage(message, level = 'info') {
     logMessage('✅ initWidget函数已就绪');
 
     // 创建CDN模型加载函数
-    window.loadCDNModel = async function(modelName) {
+    window.loadCDNModel = async function (modelName) {
       try {
         logMessage(`🌐 开始加载CDN模型: ${modelName}`);
 
@@ -98,23 +98,26 @@ function logMessage(message, level = 'info') {
         // CDN模型配置
         const config = {
           waifuPath: live2d_path + 'waifu-tips.json',
-          cubism5Path: 'https://cdn.jsdelivr.net/gh/whisper8878/wg2d@master/wg2d/src/CubismSdkForWeb-5-r.4/Core/live2dcubismcore.min.js',
-          models: [{
-            name: modelName,
-            message: `${modelName} CDN模型加载成功！`,
-            paths: [`${CDN_BASE}${modelName}/${modelName}.model3.json`]
-          }],
+          cubism5Path:
+            'https://cdn.jsdelivr.net/gh/whisper8878/wg2d@master/wg2d/src/CubismSdkForWeb-5-r.4/Core/live2dcubismcore.min.js',
+          models: [
+            {
+              name: modelName,
+              message: `${modelName} CDN模型加载成功！`,
+              paths: [`${CDN_BASE}${modelName}/${modelName}.model3.json`],
+            },
+          ],
           modelId: 0,
           drag: true,
           logLevel: 'info',
-          tools: ['switch-model', 'switch-texture', 'photo', 'info', 'quit']
+          tools: ['switch-model', 'switch-texture', 'photo', 'info', 'quit'],
         };
 
         // 初始化Widget
         window.initWidget(config);
-        
+
         logMessage(`✅ ${modelName} 模型配置完成，等待加载...`);
-        
+
         // 等待模型加载完成后自动初始化表情系统
         setTimeout(async () => {
           logMessage('🎭 自动初始化表情系统...');
@@ -129,7 +132,7 @@ function logMessage(message, level = 'info') {
     };
 
     // 获取当前模型
-    window.getCurrentCDNModel = function() {
+    window.getCurrentCDNModel = function () {
       try {
         if (window.modelManager && window.modelManager.getCurrentModel) {
           return window.modelManager.getCurrentModel();
@@ -142,7 +145,7 @@ function logMessage(message, level = 'info') {
     };
 
     // 表情预加载系统
-    window.initExpressions = async function() {
+    window.initExpressions = async function () {
       try {
         logMessage('🎭 开始初始化表情预加载系统...');
 
@@ -222,7 +225,7 @@ function logMessage(message, level = 'info') {
     // 创建表情播放函数
     function createExpressionFunctions(model) {
       // 表情播放函数
-      window.playExpression = function(expressionName) {
+      window.playExpression = function (expressionName) {
         if (!isExpressionSystemReady) {
           logMessage('❌ 表情系统未就绪，请先调用 initExpressions()', 'warn');
           return false;
@@ -240,7 +243,7 @@ function logMessage(message, level = 'info') {
           if (expression) {
             model._expressionManager.stopAllMotions();
             const handle = model._expressionManager.startMotionPriority(expression, false, 10);
-            
+
             if (handle !== -1) {
               logMessage(`🎭 播放表情: ${expressionName}`);
               return true;
@@ -256,17 +259,17 @@ function logMessage(message, level = 'info') {
       };
 
       // 获取可用表情列表
-      window.getAvailableExpressions = function() {
+      window.getAvailableExpressions = function () {
         return availableExpressions.map(exp => exp.name);
       };
 
       // 随机播放表情
-      window.playRandomExpression = function() {
+      window.playRandomExpression = function () {
         if (availableExpressions.length === 0) {
           logMessage('❌ 没有可用的表情', 'warn');
           return false;
         }
-        
+
         const randomExpression = availableExpressions[Math.floor(Math.random() * availableExpressions.length)];
         return window.playExpression(randomExpression.name);
       };
@@ -281,19 +284,20 @@ function logMessage(message, level = 'info') {
 
     logMessage('🌟 Live2D Widget Enhanced 初始化完成！');
     logMessage('💡 使用方法:');
-    logMessage('   loadCDNModel("模型名") - 加载CDN模型');
+    logMessage('   loadCDNModel("模型名") - 加载CDN模型 (如: ariu, xiaoeemo)');
     logMessage('   initExpressions() - 初始化表情系统');
     logMessage('   playExpression("表情名") - 播放表情');
     logMessage('   getAvailableExpressions() - 获取可用表情列表');
-
+    logMessage('📋 可用模型: ariu, xiaoeemo (使用英文文件夹名)');
   } catch (error) {
     logMessage(`❌ Live2D Widget Enhanced 初始化失败: ${error.message}`, 'error');
   }
 })();
 
-console.log(`\n%cLive2D%cWidget%cEnhanced%c\n`, 
-  'padding: 8px; background: #cd3e45; font-weight: bold; font-size: large; color: white;', 
-  'padding: 8px; background: #ff5450; font-size: large; color: #eee;', 
+console.log(
+  `\n%cLive2D%cWidget%cEnhanced%c\n`,
+  'padding: 8px; background: #cd3e45; font-weight: bold; font-size: large; color: white;',
+  'padding: 8px; background: #ff5450; font-size: large; color: #eee;',
   'padding: 8px; background: #4CAF50; font-size: large; color: white;',
-  ''
+  '',
 );
