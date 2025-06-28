@@ -121,8 +121,27 @@ function logMessage(message, level = 'info') {
         // 等待模型加载完成后自动初始化表情系统
         setTimeout(async () => {
           logMessage('🎭 自动初始化表情系统...');
-          await window.initExpressions();
-        }, 5000);
+
+          // 重试机制，最多尝试10次
+          let retries = 0;
+          const maxRetries = 10;
+
+          const tryInitExpressions = async () => {
+            const model = window.getCurrentCDNModel();
+            if (model) {
+              logMessage('✅ 模型已就绪，开始初始化表情系统');
+              await window.initExpressions();
+            } else if (retries < maxRetries) {
+              retries++;
+              logMessage(`⏳ 模型还未就绪，重试 ${retries}/${maxRetries}...`, 'warn');
+              setTimeout(tryInitExpressions, 1000);
+            } else {
+              logMessage('❌ 模型加载超时，表情系统初始化失败', 'error');
+            }
+          };
+
+          tryInitExpressions();
+        }, 3000);
 
         return true;
       } catch (error) {
@@ -134,9 +153,33 @@ function logMessage(message, level = 'info') {
     // 获取当前模型
     window.getCurrentCDNModel = function () {
       try {
+        // 方法1: 通过modelManager
         if (window.modelManager && window.modelManager.getCurrentModel) {
-          return window.modelManager.getCurrentModel();
+          const model = window.modelManager.getCurrentModel();
+          if (model) {
+            logMessage(`✅ 通过modelManager获取到模型: ${model.constructor.name}`);
+            return model;
+          }
         }
+
+        // 方法2: 通过全局Live2D对象
+        if (window.Live2DCubismFramework && window.Live2DCubismFramework.CubismFramework) {
+          // 尝试从Live2D管理器获取
+          if (window.live2dManager && window.live2dManager._models && window.live2dManager._models.length > 0) {
+            const model = window.live2dManager._models[0];
+            logMessage(`✅ 通过live2dManager获取到模型: ${model.constructor.name}`);
+            return model;
+          }
+        }
+
+        // 方法3: 检查canvas上下文中的模型
+        const canvas = document.getElementById('live2d');
+        if (canvas && canvas._live2dModel) {
+          logMessage(`✅ 通过canvas获取到模型: ${canvas._live2dModel.constructor.name}`);
+          return canvas._live2dModel;
+        }
+
+        logMessage(`⚠️ 无法获取当前模型，尝试的方法都失败了`, 'warn');
         return null;
       } catch (error) {
         logMessage(`❌ 获取当前模型失败: ${error.message}`, 'error');
