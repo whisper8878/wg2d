@@ -153,21 +153,25 @@ function logMessage(message, level = 'info') {
     // 获取当前模型
     window.getCurrentCDNModel = function () {
       try {
-        // 方法1: 通过modelManager
-        if (window.modelManager && window.modelManager.getCurrentModel) {
-          const model = window.modelManager.getCurrentModel();
-          if (model) {
-            logMessage(`✅ 通过modelManager获取到模型: ${model.constructor.name}`);
-            return model;
+        // 方法1: 通过modelManager.cubism5model (本地版本的正确路径)
+        const manager = window.modelManager?.cubism5model;
+        if (manager && manager._subdelegates && manager._subdelegates.getSize() > 0) {
+          const subdelegate = manager._subdelegates.at(0);
+          if (subdelegate && subdelegate._live2dManager) {
+            const live2dManager = subdelegate._live2dManager;
+            if (live2dManager._models && live2dManager._models.getSize() > 0) {
+              const model = live2dManager._models.at(0);
+              logMessage(`✅ 通过modelManager.cubism5model获取到模型: ${model.constructor.name}`);
+              return model;
+            }
           }
         }
 
-        // 方法2: 通过全局Live2D对象
-        if (window.Live2DCubismFramework && window.Live2DCubismFramework.CubismFramework) {
-          // 尝试从Live2D管理器获取
-          if (window.live2dManager && window.live2dManager._models && window.live2dManager._models.length > 0) {
-            const model = window.live2dManager._models[0];
-            logMessage(`✅ 通过live2dManager获取到模型: ${model.constructor.name}`);
+        // 方法2: 通过modelManager.getCurrentModel (备用方法)
+        if (window.modelManager && window.modelManager.getCurrentModel) {
+          const model = window.modelManager.getCurrentModel();
+          if (model) {
+            logMessage(`✅ 通过modelManager.getCurrentModel获取到模型: ${model.constructor.name}`);
             return model;
           }
         }
