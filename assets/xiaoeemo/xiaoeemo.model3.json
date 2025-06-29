@@ -31,6 +31,22 @@
         "File": "6.exp3.json"
       },
       {
+        "Name": "mouth_open",
+        "File": "mouth_open_test.exp3.json"
+      },
+      {
+        "Name": "mouth_half",
+        "File": "mouth_half_open.exp3.json"
+      },
+      {
+        "Name": "mouth_slight",
+        "File": "mouth_slight_open.exp3.json"
+      },
+      {
+        "Name": "mouth_close",
+        "File": "mouth_close_test.exp3.json"
+      },
+      {
         "Name": "表情7",
         "File": "7.exp3.json"
       }
@@ -49,3 +65,4 @@
     }
   ]
 }
+

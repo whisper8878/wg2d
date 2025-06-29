@@ -32,6 +32,62 @@
       {
         "Name": "圈圈眼",
         "File": "circle_eyes.exp3.json"
+      },
+      {
+        "Name": "戴帽子",
+        "File": "wear_hat.exp3.json"
+      },
+      {
+        "Name": "手柄",
+        "File": "gamepad.exp3.json"
+      },
+      {
+        "Name": "裙子",
+        "File": "skirt.exp3.json"
+      },
+      {
+        "Name": "马尾L隐藏",
+        "File": "ponytail_left_hide.exp3.json"
+      },
+      {
+        "Name": "马尾R隐藏",
+        "File": "ponytail_right_hide.exp3.json"
+      },
+      {
+        "Name": "黑化",
+        "File": "dark_mode.exp3.json"
+      },
+      {
+        "Name": "JK包",
+        "File": "jk_bag.exp3.json"
+      },
+      {
+        "Name": "mouth_close",
+        "File": "ariu_mouth_close.exp3.json"
+      },
+      {
+        "Name": "mouth_slight",
+        "File": "ariu_mouth_slight_open.exp3.json"
+      },
+      {
+        "Name": "mouth_half",
+        "File": "ariu_mouth_half_open.exp3.json"
+      },
+      {
+        "Name": "mouth_open",
+        "File": "ariu_mouth_open.exp3.json"
+      },
+      {
+        "Name": "Heart Eyes Copy",
+        "File": "heart_eyes_copy.exp3.json"
+      },
+      {
+        "Name": "Circle Eyes Copy",
+        "File": "circle_eyes_copy.exp3.json"
+      },
+      {
+        "Name": "Take Off Coat Copy",
+        "File": "take_off_coat_copy.exp3.json"
       }
     ]
   },
